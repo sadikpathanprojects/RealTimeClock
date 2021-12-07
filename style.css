@@ -1,7 +1,7 @@
 .container{
     padding-top: 110px;
     height: 500px;
-    background-color: aqua;
+   
   
 }
 #time{
@@ -11,11 +11,7 @@ h1{
     font-family: Arial, Helvetica, sans-serif;
     color: darkorchid;
 }
-img{
-    height: 500px;
-    width: 500px;
-    border-radius: 100%;
-}
+
 .inside
 {
     margin-top: 5px;
