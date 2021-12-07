@@ -1,0 +1,27 @@
+
+#time{
+    margin-top: 50px;
+}
+h1{
+    font-family: Arial, Helvetica, sans-serif;
+    color: darkorchid;
+}
+img{
+    height: 500px;
+    width: 500px;
+    border-radius: 100%;
+}
+.inside
+{
+    margin-top: 5px;
+    padding-top: 70px;
+    margin-right: 10px;
+    background-color: rgb(97, 201, 178);
+    width: 530px;
+    height: 420px;
+    border-radius: 100%;
+}
+
+.realtime{
+    margin-top: 150px;
+}
