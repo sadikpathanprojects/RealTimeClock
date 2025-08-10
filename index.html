@@ -1,38 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9181718170151646"
-     crossorigin="anonymous"></script>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Time Clock.</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Time Clock - Sadik Pathan</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at center, #0d0d0d, #000000);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+        overflow: hidden;
+    }
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+        color: #ffcc00;
+        text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff6600;
+    }
+    .clock {
+        font-size: 4rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-shadow: 0 0 20px #00ffff, 0 0 40px #0099ff;
+        animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+        from { text-shadow: 0 0 20px #00ffff, 0 0 40px #0099ff; }
+        to { text-shadow: 0 0 30px #00ffcc, 0 0 50px #00ccff; }
+    }
+    .date {
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+        color: #cccccc;
+    }
+    footer {
+        position: absolute;
+        bottom: 15px;
+        font-size: 0.9rem;
+        color: #aaa;
+    }
+    footer span {
+        font-weight: bold;
+        color: #ffcc00;
+    }
+</style>
 </head>
-
 <body>
-    <center>
-        <h1>Real Time clock.</h1>
-        <h2>Made with love by Sadik Pathan.</h2>
-        <h2 id="time">Time</h2>
-       
-           
-            <div class="row">
-                <div class="column">
-                    <h1 class="realtime"></h1>
-                </div>
-                
-            </div>
 
-        
-    </center>
+<h1>Real Time Clock</h1>
+<div class="clock" id="clock"></div>
+<div class="date" id="date"></div>
 
+<footer>Made with ❤️ by <span>Sadik Pathan</span></footer>
 
+<script>
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
 
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+}
 
+setInterval(updateClock, 1000);
+updateClock();
+</script>
 
-    <script src="file.js"></script>
 </body>
-
 </html>
