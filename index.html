@@ -2,79 +2,123 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Real Time Clock - Sadik Pathan</title>
+<title>Luxury Analog Clock</title>
 <style>
     body {
-        margin: 0;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: radial-gradient(circle at center, #0d0d0d, #000000);
-        color: #fff;
+        background: radial-gradient(circle at center, #222 0%, #000 100%);
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         height: 100vh;
-        text-align: center;
-        overflow: hidden;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
     }
-    h1 {
-        font-size: 2.2rem;
-        margin-bottom: 0.5rem;
-        color: #ffcc00;
-        text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff6600;
+    canvas {
+        background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+        border-radius: 50%;
+        box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.1);
     }
-    .clock {
-        font-size: 4rem;
+    .footer {
+        margin-top: 20px;
+        font-size: 18px;
         font-weight: bold;
-        letter-spacing: 2px;
-        text-shadow: 0 0 20px #00ffff, 0 0 40px #0099ff;
-        animation: glow 2s infinite alternate;
-    }
-    @keyframes glow {
-        from { text-shadow: 0 0 20px #00ffff, 0 0 40px #0099ff; }
-        to { text-shadow: 0 0 30px #00ffcc, 0 0 50px #00ccff; }
-    }
-    .date {
-        font-size: 1.2rem;
-        margin-top: 0.5rem;
-        color: #cccccc;
-    }
-    footer {
-        position: absolute;
-        bottom: 15px;
-        font-size: 0.9rem;
-        color: #aaa;
-    }
-    footer span {
-        font-weight: bold;
-        color: #ffcc00;
+        letter-spacing: 1px;
+        color: #d4af37; /* gold color */
     }
 </style>
 </head>
 <body>
-
-<h1>Real Time Clock</h1>
-<div class="clock" id="clock"></div>
-<div class="date" id="date"></div>
-
-<footer>Made with ❤️ by <span>Sadik Pathan</span></footer>
+    <canvas id="clock" width="350" height="350"></canvas>
+    <div class="footer">Created by Sadik Pathan</div>
 
 <script>
-function updateClock() {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+const canvas = document.getElementById("clock");
+const ctx = canvas.getContext("2d");
+const radius = canvas.height / 2;
+ctx.translate(radius, radius);
 
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('date').textContent = now.toLocaleDateString(undefined, options);
+function drawClock() {
+    drawFace(ctx, radius);
+    drawNumbers(ctx, radius);
+    drawTime(ctx, radius);
 }
 
-setInterval(updateClock, 1000);
-updateClock();
-</script>
+function drawFace(ctx, radius) {
+    // Outer metallic ring
+    const grad = ctx.createRadialGradient(0, 0, radius * 0.9, 0, 0, radius * 1.05);
+    grad.addColorStop(0, '#ccc');
+    grad.addColorStop(0.5, '#888');
+    grad.addColorStop(1, '#222');
+    ctx.beginPath();
+    ctx.arc(0, 0, radius - 5, 0, 2 * Math.PI);
+    ctx.fillStyle = grad;
+    ctx.fill();
 
+    // Inner dial
+    ctx.beginPath();
+    ctx.arc(0, 0, radius * 0.92, 0, 2 * Math.PI);
+    ctx.fillStyle = "#111";
+    ctx.fill();
+
+    // Center cap
+    ctx.beginPath();
+    ctx.arc(0, 0, 6, 0, 2 * Math.PI);
+    ctx.fillStyle = "#d4af37"; // Gold center
+    ctx.fill();
+}
+
+function drawNumbers(ctx, radius) {
+    ctx.font = radius * 0.15 + "px serif";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fff";
+    for (let num = 1; num <= 12; num++) {
+        let ang = num * Math.PI / 6;
+        ctx.rotate(ang);
+        ctx.translate(0, -radius * 0.78);
+        ctx.rotate(-ang);
+        ctx.fillText(num.toString(), 0, 0);
+        ctx.rotate(ang);
+        ctx.translate(0, radius * 0.78);
+        ctx.rotate(-ang);
+    }
+}
+
+function drawTime(ctx, radius) {
+    const now = new Date();
+    let hour = now.getHours();
+    let minute = now.getMinutes();
+    let second = now.getSeconds();
+
+    // Hour hand
+    hour = hour % 12;
+    hour = (hour * Math.PI / 6) + (minute * Math.PI / (6 * 60)) + (second * Math.PI / (360 * 60));
+    drawHand(ctx, hour, radius * 0.5, 6, "#d4af37");
+
+    // Minute hand
+    minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
+    drawHand(ctx, minute, radius * 0.72, 4, "#fff");
+
+    // Second hand
+    second = (second * Math.PI / 30);
+    drawHand(ctx, second, radius * 0.78, 2, "#e74c3c");
+}
+
+function drawHand(ctx, pos, length, width, color) {
+    ctx.beginPath();
+    ctx.lineWidth = width;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = color;
+    ctx.moveTo(0, 0);
+    ctx.rotate(pos);
+    ctx.lineTo(0, -length);
+    ctx.stroke();
+    ctx.rotate(-pos);
+}
+
+setInterval(drawClock, 1000);
+</script>
 </body>
 </html>
