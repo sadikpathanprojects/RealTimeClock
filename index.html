@@ -11,14 +11,16 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        color: white;
-        font-family: Arial, sans-serif;
         margin: 0;
+        font-family: Arial, sans-serif;
+        color: white;
     }
     canvas {
         background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
         border-radius: 50%;
         box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.1);
+        max-width: 90vw;
+        max-height: 90vw;
     }
     .footer {
         margin-top: 20px;
@@ -30,18 +32,27 @@
 </style>
 </head>
 <body>
-    <canvas id="clock" width="350" height="350"></canvas>
+    <canvas id="clock"></canvas>
     <div class="footer">Created by Sadik Pathan</div>
 
 <script>
 const canvas = document.getElementById("clock");
 const ctx = canvas.getContext("2d");
-const radius = canvas.height / 2;
-ctx.translate(radius, radius);
+
+function resizeCanvas() {
+    let size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+    canvas.width = size;
+    canvas.height = size;
+    radius = canvas.height / 2;
+    ctx.translate(radius, radius);
+}
+let radius;
 
 function drawClock() {
+    ctx.clearRect(-radius, -radius, canvas.width, canvas.height);
     drawFace(ctx, radius);
     drawNumbers(ctx, radius);
+    drawBrand(ctx, radius);
     drawTime(ctx, radius);
 }
 
@@ -64,7 +75,7 @@ function drawFace(ctx, radius) {
 
     // Center cap
     ctx.beginPath();
-    ctx.arc(0, 0, 6, 0, 2 * Math.PI);
+    ctx.arc(0, 0, radius * 0.04, 0, 2 * Math.PI);
     ctx.fillStyle = "#d4af37"; // Gold center
     ctx.fill();
 }
@@ -84,6 +95,13 @@ function drawNumbers(ctx, radius) {
         ctx.translate(0, radius * 0.78);
         ctx.rotate(-ang);
     }
+}
+
+function drawBrand(ctx, radius) {
+    ctx.font = radius * 0.12 + "px Georgia";
+    ctx.fillStyle = "#d4af37"; // Gold text
+    ctx.textAlign = "center";
+    ctx.fillText("Sadik Pathan", 0, radius * 0.35);
 }
 
 function drawTime(ctx, radius) {
@@ -118,7 +136,13 @@ function drawHand(ctx, pos, length, width, color) {
     ctx.rotate(-pos);
 }
 
+// Initial setup
+resizeCanvas();
 setInterval(drawClock, 1000);
+window.addEventListener("resize", () => {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    resizeCanvas();
+});
 </script>
 </body>
 </html>
